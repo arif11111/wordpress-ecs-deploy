@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "wp_fargrate_task" {
 		},
 	    {
 		  "name": WORDPRESS_DATABASE_PASSWORD",
-		  "valueFrom": "${aws_ssm_parameter.wp_database_username.arn}/database/wordpress/passwd"
+		  "valueFrom": "${aws_ssm_parameter.wp_database_passwd.arn}/database/wordpress/passwd"
 		},		
 	  ]	
     }

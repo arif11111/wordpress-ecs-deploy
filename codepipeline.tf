@@ -99,7 +99,7 @@ resource "aws_iam_role_policy" "pipeline" {
 }
 
 resource "aws_codepipeline" "this" {
-  name = "${var.service_name}-pipeline"
+  name = "wordpress-pipeline"
   role_arn = "${aws_iam_role.pipeline.arn}"
 
   artifact_store {

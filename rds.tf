@@ -2,9 +2,6 @@
 
 
 
-
-
-
 resource "aws_db_instance" "default" {
   allocated_storage    = 10
   db_name              = "wordpress"
@@ -13,7 +10,7 @@ resource "aws_db_instance" "default" {
   instance_class       = "db.t3.micro"
   username             = "admin"
   password             = "admin1234"
-  db_subnet_group_name =  "${aws_db_subnet_group.wordpress_db_subnet_group.id}"
+  db_subnet_group_name =  "${aws_db_subnet_group.wordpress_db_subnet_group.name}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_db_security_group.id}"]
   parameter_group_name = "default.mysql5.7"
   skip_final_snapshot  = true
@@ -53,12 +50,12 @@ resource "aws_ssm_parameter" "wp_database_username" {
 
 
 resource "aws_ssm_parameter" "wp_database_passwd" {
-    name        = "/database/wordpress/user"
+    name        = "/database/wordpress/passwd"
     type        = "SecureString"
     value       = "${ var.wp_db_password }"
 }
 
-esource "aws_iam_role_policy" "password_policy_parameterstore" {
+resource "aws_iam_role_policy" "password_policy_parameterstore" {
   name = "password-policy-parameterstore"
   role = aws_iam_role.ecs_task_execution_role.id
 
@@ -72,7 +69,9 @@ esource "aws_iam_role_policy" "password_policy_parameterstore" {
         ],
         "Effect": "Allow",
         "Resource": [
-          "${aws_ssm_parameter.database_password_parameter.arn}"
+          "${aws_ssm_parameter.wp_database_username.arn}"
+          "${aws_ssm_parameter.wp_database_passwd.arn}"
+
         ]
       }
     ]
